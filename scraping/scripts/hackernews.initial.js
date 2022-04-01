@@ -78,39 +78,14 @@ const puppeteer = require("puppeteer");
             } else {
                 try {
                     // click on .Pagination_item if it contains innerText of nextPageNumber
-                    await page.waitForSelector(".Pagination_item");
-                    await page.waitForSelector(
-                        ".Pagination_item:nth-child(" +
-                            nextPageNumber +
-                            ") > button"
-                    );
-                    await page.click(
-                        ".Pagination_item:nth-child(" +
-                            nextPageNumber +
-                            ") > button"
-                    );
-                    await page.waitForNavigation();
-                    await page.waitForTimeout(5000);
+                    await clickOnNextLink(page, nextPageNumber);
                 } catch (e) {
                     console.log("e", e);
                     console.log("trying again");
                     try {
                         // reload page and try again one more time before exiting
                         await page.reload();
-                        await page.waitForTimeout(5000);
-                        await page.waitForSelector(".Pagination_item");
-                        await page.waitForSelector(
-                            ".Pagination_item:nth-child(" +
-                                nextPageNumber +
-                                ") > button"
-                        );
-                        await page.click(
-                            ".Pagination_item:nth-child(" +
-                                nextPageNumber +
-                                ") > button"
-                        );
-                        await page.waitForNavigation();
-                        await page.waitForTimeout(5000);
+                        await clickOnNextLink(page, nextPageNumber);
                     } catch (e) {
                         console.log("e", e);
                         // morePaginationExists = false;
@@ -132,3 +107,14 @@ const puppeteer = require("puppeteer");
 
     await browser.close();
 })();
+async function clickOnNextLink(page, nextPageNumber) {
+    await page.waitForSelector(".Pagination_item");
+    await page.waitForSelector(
+        ".Pagination_item:nth-child(" + nextPageNumber + ") > button"
+    );
+    await page.click(
+        ".Pagination_item:nth-child(" + nextPageNumber + ") > button"
+    );
+    await page.waitForNavigation();
+    await page.waitForTimeout(5000);
+}
